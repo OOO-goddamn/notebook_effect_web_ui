@@ -1,0 +1,1 @@
+export { NameContext, type NameContextType } from './NameContext';

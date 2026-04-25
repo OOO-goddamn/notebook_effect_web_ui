@@ -1,44 +1,16 @@
-import styles from './auth.module.scss';
-import { useContext, useState } from 'react';
-import { NameContext } from '../../context/name/name.ts';
-const colorsPens = ['#FF0000', '#006400', '#FFA500', '#005BAC', '#800080'];
+import { useAuth } from '../../hooks/useAuth';
+import { AuthModal } from './AuthModal';
 
 export const Auth = () => {
-    const [newName, setNewName] = useState<string>('');
-    const { name, setName } = useContext(NameContext);
-    const { setColor } = useContext(NameContext);
+    const { inputName, setInputName, login, isAuthenticated } = useAuth();
+
+    if (isAuthenticated) return null;
+
     return (
-        !name && (
-            <div className={styles.auth}>
-                <div className={styles.modal}>
-                    <h3 className='text-2xl'>Имя</h3>
-                    <input
-                        className={styles.input}
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                    />
-                    <button
-                        onClick={() => {
-                            setName(newName);
-                            localStorage.setItem('messenger-name', newName);
-                            const randomColor =
-                                colorsPens[
-                                    Math.floor(
-                                        Math.random() * colorsPens.length,
-                                    )
-                                ];
-                            setColor(randomColor);
-                            localStorage.setItem(
-                                'messenger-color',
-                                randomColor,
-                            );
-                        }}
-                        className={styles.btn}
-                    >
-                        Окей
-                    </button>
-                </div>
-            </div>
-        )
+        <AuthModal
+            name={inputName}
+            onNameChange={setInputName}
+            onSubmit={login}
+        />
     );
 };

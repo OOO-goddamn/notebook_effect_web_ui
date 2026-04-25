@@ -1,105 +1,43 @@
 import styles from './chat.module.scss';
-import clsx from 'clsx';
-import { useContext, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { NameContext } from '../../context/name/name.ts';
-import {
-    fetchMessages,
-    sendMessage,
-    type Message,
-    deleteMessage,
-} from '../../api/messages.ts';
+import { storage } from '../../lib/storage';
+import { useMessages } from '../../hooks/useMessages';
+import { useName } from '../../hooks/useName';
+import { MessageItem } from './MessageItem';
+import { MessageInput } from './MessageInput';
+import { Toolbar } from './Toolbar';
 
 export const Chat = () => {
-    const { color, name } = useContext(NameContext);
-    const queryClient = useQueryClient();
-    const [message, setMessage] = useState('');
+    const { name, color } = useName();
+    const { messages, sendMessage, deleteAllMessages } = useMessages();
 
-    const { data: messages = [] } = useQuery<Message[]>({
-        queryKey: ['messages'],
-        queryFn: fetchMessages,
-        refetchInterval: 3000,
-    });
+    const handleLogout = () => {
+        storage.clear();
+        window.location.reload();
+    };
 
-    const mutation = useMutation({
-        mutationFn: (text: string) =>
-            sendMessage({
-                authorName: name ?? '',
-                text: text,
-                color: color ?? 'black',
-            }),
-        onSettled: (_data, _error, _variables, _onMutateResult, context) =>
-            context.client.invalidateQueries({ queryKey: ['messages'] }),
-    });
-
-    const effectNotebook = useMutation({
-        mutationFn: deleteMessage,
-        onSettled: (_data, _error, _variables, _onMutateResult, context) =>
-            context.client.invalidateQueries({ queryKey: ['messages'] }),
-    });
+    const handleSend = (text: string) => {
+        sendMessage({
+            authorName: name ?? '',
+            text,
+            color: color ?? 'black',
+        });
+    };
 
     return (
         <>
-            <button
-                className={clsx(styles.btn, styles.erase)}
-                onClick={() => effectNotebook.mutate()}
-            >
-                <img width={100} src='/erase.png' />
-            </button>
-            <button
-                className={clsx(styles.btn, styles.ruler)}
-                onClick={() => {
-                    localStorage.removeItem('messenger-name');
-                    localStorage.removeItem('messenger-color');
-                    window.location.reload();
-                }}
-            >
-                <img width={100} src='/ruler.png' />
-            </button>
+            <Toolbar
+                onDeleteAll={deleteAllMessages}
+                onLogout={handleLogout}
+            />
             <div className={styles.redLine} />
-            {messages.map((msg, index) => {
-                return (
-                    <div
-                        key={index}
-                        className={clsx(styles.notebookLines, 'flex')}
-                        style={{
-                            color: msg.color,
-                        }}
-                    >
-                        <div>{msg.authorName}:</div>
-                        <div>{msg.text}</div>
-                    </div>
-                );
-            })}
-            <div
-                className={clsx(styles.notebookLines, styles.input, 'flex')}
-                style={{ color: color ?? 'black' }}
-            >
-                <div>{name}:</div>
-                <textarea
-                    className={styles.textarea}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            mutation.mutate(message);
-                            queryClient.setQueryData<Message[]>(
-                                ['messages'],
-                                (old) => [
-                                    ...(old ?? []),
-                                    {
-                                        authorName: name ?? '',
-                                        text: message,
-                                        color: color ?? '',
-                                    },
-                                ],
-                            );
-                            setMessage('');
-                            e.preventDefault();
-                        }
-                    }}
-                />
-            </div>
+            {messages.map((msg) => (
+                <MessageItem key={`${msg.authorName}-${msg.text}-${msg.color}`} message={msg} />
+            ))}
+            <MessageInput
+                userName={name}
+                userColor={color}
+                onSend={handleSend}
+            />
         </>
     );
 };
