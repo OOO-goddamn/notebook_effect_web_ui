@@ -1,7 +1,7 @@
 import styles from './chat.module.scss';
 import clsx from 'clsx';
 import { useContext, useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { NameContext } from '../../context/name/name.ts';
 import {
     fetchMessages,
@@ -11,7 +11,6 @@ import {
 
 export const Chat = () => {
     const { color, name } = useContext(NameContext);
-    const queryClient = useQueryClient();
     const [message, setMessage] = useState('');
 
     const { data: messages = [] } = useQuery<Message[]>({
@@ -27,12 +26,12 @@ export const Chat = () => {
                 text: text,
                 color: color ?? 'black',
             }),
-        onMutate: async (text: string) => {
-            await queryClient.cancelQueries({ queryKey: ['messages'] });
-            const previousMessages = queryClient.getQueryData<Message[]>([
+        onMutate: async (text: string, context) => {
+            await context.client.cancelQueries({ queryKey: ['messages'] });
+            const previousMessages = context.client.getQueryData<Message[]>([
                 'messages',
             ]);
-            queryClient.setQueryData<Message[]>(['messages'], (old) => [
+            context.client.setQueryData<Message[]>(['messages'], (old) => [
                 ...(old ?? []),
                 {
                     authorName: name ?? '',
@@ -42,14 +41,10 @@ export const Chat = () => {
             ]);
             return { previousMessages };
         },
-        onError: (_err, _text, context) => {
-            queryClient.setQueryData(['messages'], context?.previousMessages);
-        },
-        onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['messages'] });
-        },
+        onSettled: (_data, _error, _variables, _onMutateResult, context) =>
+            context.client.invalidateQueries({ queryKey: ['messages'] }),
     });
-
+    console.log(messages);
     return (
         <>
             <div className={styles.redLine} />
@@ -62,7 +57,7 @@ export const Chat = () => {
                             color: msg.color,
                         }}
                     >
-                        <div>{msg.authorName}: </div>
+                        <div>{msg.authorName}:</div>
                         <div>{msg.text}</div>
                     </div>
                 );
@@ -71,7 +66,7 @@ export const Chat = () => {
                 className={clsx(styles.notebookLines, styles.input, 'flex')}
                 style={{ color: color ?? 'black' }}
             >
-                <div>{name}: </div>
+                <div>{name}:</div>
                 <textarea
                     className={styles.textarea}
                     value={message}
