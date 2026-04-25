@@ -44,7 +44,7 @@ export const Chat = () => {
                 className={styles.btn}
                 onClick={() => effectNotebook.mutate()}
             >
-                <img width={100} src='/src/assets/erase.png' />
+                <img width={100} src='/erase.png' />
             </button>
             <div className={styles.redLine} />
             {messages.map((msg, index) => {
