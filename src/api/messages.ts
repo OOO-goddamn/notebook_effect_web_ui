@@ -1,6 +1,7 @@
 export interface Message {
     authorName: string;
     text: string;
+    color: string;
 }
 
 const BASE_URL = 'https://notebook-effect.onrender.com';
@@ -13,7 +14,10 @@ export const fetchMessages = async (): Promise<Message[]> => {
     return response.json();
 };
 
-export const sendMessage = async (authorName: string, text: string): Promise<Message> => {
+export const sendMessage = async (
+    authorName: string,
+    text: string,
+): Promise<Message> => {
     const response = await fetch(`${BASE_URL}/messages`, {
         method: 'POST',
         headers: {

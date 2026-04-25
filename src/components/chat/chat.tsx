@@ -3,10 +3,14 @@ import clsx from 'clsx';
 import { useContext, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { NameContext } from '../../context/name/name.ts';
-import { fetchMessages, sendMessage, type Message } from '../../api/messages.ts';
+import {
+    fetchMessages,
+    sendMessage,
+    type Message,
+} from '../../api/messages.ts';
 
 export const Chat = () => {
-    const { name } = useContext(NameContext);
+    const { color, name } = useContext(NameContext);
     const queryClient = useQueryClient();
     const [message, setMessage] = useState('');
 
@@ -20,10 +24,16 @@ export const Chat = () => {
         mutationFn: (text: string) => sendMessage(name ?? '', text),
         onMutate: async (text: string) => {
             await queryClient.cancelQueries({ queryKey: ['messages'] });
-            const previousMessages = queryClient.getQueryData<Message[]>(['messages']);
+            const previousMessages = queryClient.getQueryData<Message[]>([
+                'messages',
+            ]);
             queryClient.setQueryData<Message[]>(['messages'], (old) => [
                 ...(old ?? []),
-                { authorName: name ?? '', text },
+                {
+                    authorName: name ?? '',
+                    text,
+                    color: color ?? '',
+                },
             ]);
             return { previousMessages };
         },
@@ -40,13 +50,22 @@ export const Chat = () => {
             <div className={styles.redLine} />
             {messages.map((msg, index) => {
                 return (
-                    <div key={index} className={clsx(styles.notebookLines, 'flex')}>
+                    <div
+                        key={index}
+                        className={clsx(styles.notebookLines, 'flex')}
+                        style={{
+                            color: msg.color,
+                        }}
+                    >
                         <div>{msg.authorName}: </div>
                         <div>{msg.text}</div>
                     </div>
                 );
             })}
-            <div className={clsx(styles.notebookLines, styles.input, 'flex')}>
+            <div
+                className={clsx(styles.notebookLines, styles.input, 'flex')}
+                style={{ color: color ?? 'black' }}
+            >
                 <div>{name}: </div>
                 <textarea
                     className={styles.textarea}

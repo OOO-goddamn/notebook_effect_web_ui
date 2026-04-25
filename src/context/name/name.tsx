@@ -5,5 +5,12 @@ export const ProviderNameContext = ({ children }: { children: ReactNode }) => {
     const [name, setName] = useState<string | null>(
         localStorage.getItem('messenger-name'),
     );
-    return <NameContext value={{ name, setName }}>{children}</NameContext>;
+    const [color, setColor] = useState<string | null>(
+        localStorage.getItem('messenger-color'),
+    );
+    return (
+        <NameContext value={{ name, setName, color, setColor }}>
+            {children}
+        </NameContext>
+    );
 };
