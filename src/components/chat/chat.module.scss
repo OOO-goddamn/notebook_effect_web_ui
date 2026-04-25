@@ -42,9 +42,19 @@ $message-left: 2rem + $red-line-left;
 }
 
 .btn {
+    font-size: 36px;
+    cursor: pointer;
+}
+
+.erase {
     position: absolute;
     left: 20px;
     top: 40px;
-    font-size: 36px;
-    cursor: pointer;
+}
+
+.ruler {
+    position: absolute;
+    left: 20px;
+    top: 180px;
+    transform: rotate(30deg);
 }

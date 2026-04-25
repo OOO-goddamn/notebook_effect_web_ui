@@ -41,10 +41,20 @@ export const Chat = () => {
     return (
         <>
             <button
-                className={styles.btn}
+                className={clsx(styles.btn, styles.erase)}
                 onClick={() => effectNotebook.mutate()}
             >
                 <img width={100} src='/erase.png' />
+            </button>
+            <button
+                className={clsx(styles.btn, styles.ruler)}
+                onClick={() => {
+                    localStorage.removeItem('messenger-name');
+                    localStorage.removeItem('messenger-color');
+                    window.location.reload();
+                }}
+            >
+                <img width={100} src='/ruler.png' />
             </button>
             <div className={styles.redLine} />
             {messages.map((msg, index) => {
