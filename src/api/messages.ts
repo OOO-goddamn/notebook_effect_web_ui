@@ -14,16 +14,13 @@ export const fetchMessages = async (): Promise<Message[]> => {
     return response.json();
 };
 
-export const sendMessage = async (
-    authorName: string,
-    text: string,
-): Promise<Message> => {
+export const sendMessage = async (body: Message): Promise<Message> => {
     const response = await fetch(`${BASE_URL}/messages`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ authorName, text }),
+        body: JSON.stringify(body),
     });
     if (!response.ok) {
         throw new Error('Failed to send message');

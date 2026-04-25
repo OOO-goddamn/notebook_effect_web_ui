@@ -21,7 +21,12 @@ export const Chat = () => {
     });
 
     const mutation = useMutation({
-        mutationFn: (text: string) => sendMessage(name ?? '', text),
+        mutationFn: (text: string) =>
+            sendMessage({
+                authorName: name ?? '',
+                text: text,
+                color: color ?? 'black',
+            }),
         onMutate: async (text: string) => {
             await queryClient.cancelQueries({ queryKey: ['messages'] });
             const previousMessages = queryClient.getQueryData<Message[]>([
