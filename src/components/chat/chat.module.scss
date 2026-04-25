@@ -1,0 +1,42 @@
+$red-line-left: 10rem;
+$message-left: 2rem + $red-line-left;
+.red-line {
+    background-color: #e786ae;
+    height: 100%;
+    width: 2px;
+    position: absolute;
+    left: $red-line-left;
+    z-index: 1;
+}
+
+.blue-line {
+    border-bottom: 2px solid #57b3e1;
+    height: 60px;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+
+.notebook-lines {
+    padding-left: $message-left;
+    font-size: 32px;
+    line-height: 1; /* Высота строки */
+    background-image: linear-gradient(transparent 98%, #57b3e1 2%);
+    background-size: 100% 1em; /* Должно совпадать с line-height */
+}
+
+.input {
+    height: 100%;
+}
+
+.textarea {
+    height: 100%;
+    width: 100%;
+    resize: none;
+
+    &:focus {
+        outline: none;
+        border: none;
+    }
+}

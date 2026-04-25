@@ -1,0 +1,14 @@
+@forward "./reset.css";
+@forward "./global.css";
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+body {
+    font-family: "Great Vibes", cursive;
+    height: 100vh;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
