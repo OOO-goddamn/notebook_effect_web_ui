@@ -27,3 +27,9 @@ export const sendMessage = async (body: Message): Promise<Message> => {
     }
     return response.json();
 };
+
+export const deleteMessage = async () => {
+    await fetch(`${BASE_URL}/messages`, {
+        method: 'DELETE',
+    });
+};

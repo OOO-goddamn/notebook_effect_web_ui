@@ -7,6 +7,7 @@ import {
     fetchMessages,
     sendMessage,
     type Message,
+    deleteMessage,
 } from '../../api/messages.ts';
 
 export const Chat = () => {
@@ -30,9 +31,21 @@ export const Chat = () => {
         onSettled: (_data, _error, _variables, _onMutateResult, context) =>
             context.client.invalidateQueries({ queryKey: ['messages'] }),
     });
-    console.log(messages);
+
+    const effectNotebook = useMutation({
+        mutationFn: deleteMessage,
+        onSettled: (_data, _error, _variables, _onMutateResult, context) =>
+            context.client.invalidateQueries({ queryKey: ['messages'] }),
+    });
+
     return (
         <>
+            <button
+                className={styles.btn}
+                onClick={() => effectNotebook.mutate()}
+            >
+                <img width={100} src='/src/assets/erase.png' />
+            </button>
             <div className={styles.redLine} />
             {messages.map((msg, index) => {
                 return (

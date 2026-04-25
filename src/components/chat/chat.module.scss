@@ -40,3 +40,11 @@ $message-left: 2rem + $red-line-left;
         border: none;
     }
 }
+
+.btn {
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    font-size: 36px;
+    cursor: pointer;
+}
