@@ -1,7 +1,7 @@
 import styles from './chat.module.scss';
 import clsx from 'clsx';
 import { useContext, useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { NameContext } from '../../context/name/name.ts';
 import {
     fetchMessages,
@@ -11,6 +11,7 @@ import {
 
 export const Chat = () => {
     const { color, name } = useContext(NameContext);
+    const queryClient = useQueryClient();
     const [message, setMessage] = useState('');
 
     const { data: messages = [] } = useQuery<Message[]>({
@@ -26,21 +27,6 @@ export const Chat = () => {
                 text: text,
                 color: color ?? 'black',
             }),
-        onMutate: async (text: string, context) => {
-            await context.client.cancelQueries({ queryKey: ['messages'] });
-            const previousMessages = context.client.getQueryData<Message[]>([
-                'messages',
-            ]);
-            context.client.setQueryData<Message[]>(['messages'], (old) => [
-                ...(old ?? []),
-                {
-                    authorName: name ?? '',
-                    text,
-                    color: color ?? '',
-                },
-            ]);
-            return { previousMessages };
-        },
         onSettled: (_data, _error, _variables, _onMutateResult, context) =>
             context.client.invalidateQueries({ queryKey: ['messages'] }),
     });
@@ -74,6 +60,17 @@ export const Chat = () => {
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                             mutation.mutate(message);
+                            queryClient.setQueryData<Message[]>(
+                                ['messages'],
+                                (old) => [
+                                    ...(old ?? []),
+                                    {
+                                        authorName: name ?? '',
+                                        text: message,
+                                        color: color ?? '',
+                                    },
+                                ],
+                            );
                             setMessage('');
                             e.preventDefault();
                         }
