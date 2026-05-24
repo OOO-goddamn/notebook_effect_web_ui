@@ -1,17 +1,15 @@
 import styles from './chat.module.scss';
-import { storage } from '../../lib/storage';
 import { useMessages } from '../../hooks/useMessages';
-import { useName } from '../../hooks/useName';
 import { MessageItem } from './MessageItem';
 import { MessageInput } from './MessageInput';
 import { Toolbar } from './Toolbar';
+import { useAuthStore } from '../../store/user';
 
 export const Chat = () => {
-    const { name, color } = useName();
+    const { name, color } = useAuthStore();
     const { messages, sendMessage, deleteAllMessages } = useMessages();
 
     const handleLogout = () => {
-        storage.clear();
         window.location.reload();
     };
 
@@ -25,13 +23,13 @@ export const Chat = () => {
 
     return (
         <>
-            <Toolbar
-                onDeleteAll={deleteAllMessages}
-                onLogout={handleLogout}
-            />
+            <Toolbar onDeleteAll={deleteAllMessages} onLogout={handleLogout} />
             <div className={styles.redLine} />
             {messages.map((msg) => (
-                <MessageItem key={`${msg.authorName}-${msg.text}-${msg.color}`} message={msg} />
+                <MessageItem
+                    key={`${msg.authorName}-${msg.text}-${msg.color}`}
+                    message={msg}
+                />
             ))}
             <MessageInput
                 userName={name}
