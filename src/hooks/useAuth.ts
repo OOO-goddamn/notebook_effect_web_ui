@@ -1,26 +1,20 @@
 import { useState, useCallback } from 'react';
-import { useName } from './useName';
 import { getRandomColor } from '../utils/colors';
-import { storage } from '../lib/storage';
+import { useAuthStore } from '../store/user';
 
 export const useAuth = () => {
-    const { name, setName, color, setColor } = useName();
+    const { setUser, name, color } = useAuthStore();
     const [inputName, setInputName] = useState('');
 
     const login = useCallback(() => {
         const newName = inputName.trim();
         if (!newName) return;
 
-        setName(newName);
-        storage.setName(newName);
-
         const newColor = getRandomColor();
-        setColor(newColor);
-        storage.setColor(newColor);
-    }, [inputName, setName, setColor]);
+        setUser(newName, newColor);
+    }, [inputName, setUser]);
 
     const logout = useCallback(() => {
-        storage.clear();
         window.location.reload();
     }, []);
 

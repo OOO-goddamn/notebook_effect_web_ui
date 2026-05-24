@@ -1,6 +1,6 @@
-import styles from './chat.module.scss';
+import styles from '../../chat.module.scss';
 import clsx from 'clsx';
-import type { Message } from '../../api/messages';
+import type { Message } from 'Api/messages';
 
 interface MessageItemProps {
     message: Message;
