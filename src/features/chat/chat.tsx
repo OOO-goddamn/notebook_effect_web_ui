@@ -1,9 +1,10 @@
 import styles from './chat.module.scss';
 import { useMessages } from '../../hooks/useMessages';
-import { MessageItem } from './MessageItem';
-import { MessageInput } from './MessageInput';
-import { Toolbar } from './Toolbar';
+import { MessageItem } from './components/messageItem/messageItem';
+import { MessageInput } from './components/messageInput/messageInput';
+import { Toolbar } from './components/toolbar/toolbar';
 import { useAuthStore } from '../../store/user';
+import { Page } from 'Components/page/page';
 
 export const Chat = () => {
     const { name, color } = useAuthStore();
@@ -22,7 +23,7 @@ export const Chat = () => {
     };
 
     return (
-        <>
+        <Page>
             <Toolbar onDeleteAll={deleteAllMessages} onLogout={handleLogout} />
             <div className={styles.redLine} />
             {messages.map((msg) => (
@@ -36,6 +37,6 @@ export const Chat = () => {
                 userColor={color}
                 onSend={handleSend}
             />
-        </>
+        </Page>
     );
 };

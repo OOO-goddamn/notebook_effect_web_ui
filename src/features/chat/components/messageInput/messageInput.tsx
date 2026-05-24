@@ -1,4 +1,4 @@
-import styles from './chat.module.scss';
+import styles from '../../chat.module.scss';
 import clsx from 'clsx';
 import { useState, type KeyboardEvent } from 'react';
 

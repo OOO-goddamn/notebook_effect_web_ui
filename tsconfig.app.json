@@ -1,27 +1,36 @@
 {
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "target": "es2023",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "module": "esnext",
-    "types": ["vite/client"],
-    "skipLibCheck": true,
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "target": "es2023",
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "module": "esnext",
+        "types": ["vite/client"],
+        "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
+        /* Bundler mode */
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "moduleDetection": "force",
+        "noEmit": true,
+        "jsx": "react-jsx",
 
-    /* Linting */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
-  },
-  "include": [
-    "src"
-  ]
+        /* Linting */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "erasableSyntaxOnly": true,
+        "noFallthroughCasesInSwitch": true,
+        "paths": {
+            "Features/*": ["./src/features/*"],
+            "Components/*": ["./src/components/*"],
+            "Api/*": ["./src/api/*"],
+            "Lib/*": ["./src/lib/*"],
+            "Config/*": ["./src/config/*"],
+            "Hooks/*": ["./src/hooks/*"],
+            "Store/*": ["./src/store/*"],
+            "Styles/*": ["./src/styles/*"],
+            "Utils/*": ["./src/utils/*"],
+        },
+    },
+    "include": ["src"],
 }
