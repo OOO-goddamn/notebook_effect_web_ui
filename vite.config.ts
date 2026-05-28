@@ -27,6 +27,7 @@ export default defineConfig({
             Store: path.resolve(__dirname, './src/store'),
             Styles: path.resolve(__dirname, './src/styles'),
             Utils: path.resolve(__dirname, './src/utils'),
+            Shared: path.resolve(__dirname, './src/shared'),
         },
     },
 });

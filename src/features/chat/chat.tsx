@@ -5,12 +5,14 @@ import { MessageInput } from './components/messageInput/messageInput';
 import { Toolbar } from './components/toolbar/toolbar';
 import { useAuthStore } from '../../store/user';
 import { Page } from 'Components/page/page';
+import { CONFIG } from 'Config/index';
 
 export const Chat = () => {
     const { name, color } = useAuthStore();
     const { messages, sendMessage, deleteAllMessages } = useMessages();
 
     const handleLogout = () => {
+        localStorage.removeItem(CONFIG.STORAGE_KEYS.NAME);
         window.location.reload();
     };
 
@@ -32,11 +34,13 @@ export const Chat = () => {
                     message={msg}
                 />
             ))}
-            <MessageInput
-                userName={name}
-                userColor={color}
-                onSend={handleSend}
-            />
+            {!!name && (
+                <MessageInput
+                    userName={name}
+                    userColor={color}
+                    onSend={handleSend}
+                />
+            )}
         </Page>
     );
 };
