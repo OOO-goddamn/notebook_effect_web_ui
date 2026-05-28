@@ -1,4 +1,16 @@
-import styles from './auth.module.scss';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from 'Shared/ui/dialog';
+import { Field } from 'Shared/ui/field';
+import { Label } from 'Shared/ui/label';
+import { Input } from 'Shared/ui/input';
+import { Button } from 'Shared/ui/button';
 
 interface AuthModalProps {
     name: string;
@@ -8,18 +20,29 @@ interface AuthModalProps {
 
 export const AuthModal = ({ name, onNameChange, onSubmit }: AuthModalProps) => {
     return (
-        <div className={styles.auth}>
-            <div className={styles.modal}>
-                <h3 className='text-2xl'>Имя</h3>
-                <input
-                    className={styles.input}
-                    value={name}
-                    onChange={(e) => onNameChange(e.target.value)}
-                />
-                <button onClick={onSubmit} className={styles.btn}>
-                    Окей
-                </button>
-            </div>
-        </div>
+        <Dialog defaultOpen>
+            <DialogContent className='sm:max-w-sm'>
+                <DialogHeader>
+                    <DialogTitle>Регистрация</DialogTitle>
+                    <DialogDescription>Введите свое имя</DialogDescription>
+                </DialogHeader>
+                <Field>
+                    <Label htmlFor='name'>Имя</Label>
+                    <Input
+                        id='name'
+                        name='name'
+                        value={name}
+                        onChange={(e) => onNameChange(e.target.value)}
+                    />
+                </Field>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button onClick={onSubmit} type='submit'>
+                            Сохранить
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };

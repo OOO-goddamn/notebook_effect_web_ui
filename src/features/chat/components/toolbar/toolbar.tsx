@@ -1,3 +1,4 @@
+import { useAuthStore } from 'Store/user';
 import styles from '../../chat.module.scss';
 import clsx from 'clsx';
 
@@ -7,20 +8,23 @@ interface ToolbarProps {
 }
 
 export const Toolbar = ({ onDeleteAll, onLogout }: ToolbarProps) => {
+    const { name } = useAuthStore();
     return (
-        <>
-            <button
-                className={clsx(styles.btn, styles.erase)}
-                onClick={onDeleteAll}
-            >
-                <img width={100} src='/erase.png' />
-            </button>
-            <button
-                className={clsx(styles.btn, styles.ruler)}
-                onClick={onLogout}
-            >
-                <img width={100} src='/ruler.png' />
-            </button>
-        </>
+        !!name && (
+            <>
+                <button
+                    className={clsx(styles.btn, styles.erase)}
+                    onClick={onDeleteAll}
+                >
+                    <img width={100} src='/erase.png' />
+                </button>
+                <button
+                    className={clsx(styles.btn, styles.ruler)}
+                    onClick={onLogout}
+                >
+                    <img width={100} src='/ruler.png' />
+                </button>
+            </>
+        )
     );
 };
