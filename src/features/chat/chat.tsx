@@ -9,7 +9,7 @@ import { Toolbar } from './components/toolbar/toolbar';
 import { useAuthStore } from '../../store/user';
 import { Page } from 'Components/page/page';
 import { CONFIG } from 'Config/index';
-import { Fragment } from 'react/jsx-runtime';
+import { Fragment } from 'react';
 
 export const Chat = () => {
     const { name, color } = useAuthStore();
@@ -39,6 +39,11 @@ export const Chat = () => {
                         index !== 0
                             ? new Date(messages[index - 1].creationTime)
                             : date;
+
+                    const time = date.toLocaleTimeString('ru-RU', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                    });
                     const showAuthor =
                         index === 0 ||
                         msg.authorName !== messages[index - 1].authorName;
@@ -46,7 +51,7 @@ export const Chat = () => {
                         <Fragment
                             key={`${msg.authorName}-${msg.text}-${msg.color}`}
                         >
-                            {!compareDates(prevDate, date) && (
+                            {(!compareDates(prevDate, date) || index === 0) && (
                                 <>
                                     <MessageItem
                                         style={{
@@ -78,9 +83,10 @@ export const Chat = () => {
                             )}
                             <MessageItem
                                 style={{ color: msg.color }}
-                                cls='ml-8'
+                                cls='ml-8 gap-4'
                             >
-                                {msg.text}
+                                <div>{time}</div>
+                                <div>{msg.text}</div>
                             </MessageItem>
                         </Fragment>
                     );

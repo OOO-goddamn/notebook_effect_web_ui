@@ -5,7 +5,7 @@ import type { CSSProperties, PropsWithChildren } from 'react';
 export const MessageWrapper = ({
     cls,
     children,
-}: PropsWithChildren<{ cls: string }>) => {
+}: PropsWithChildren<{ cls?: string }>) => {
     return (
         <div className={clsx(styles.notebookLines, 'flex', 'flex-col', cls)}>
             {children}
