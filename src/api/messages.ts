@@ -5,6 +5,13 @@ export interface Message {
     authorName: string;
     text: string;
     color: string;
+    creationTime: string;
+}
+
+export interface MessageWriteble {
+    authorName: string;
+    text: string;
+    color: string;
 }
 
 export const messagesApi = {
@@ -16,7 +23,7 @@ export const messagesApi = {
         return response.json();
     },
 
-    send: async (body: Omit<Message, 'id'>): Promise<Message> => {
+    send: async (body: MessageWriteble): Promise<Message> => {
         const response = await fetch(`${CONFIG.API_BASE_URL}/messages`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

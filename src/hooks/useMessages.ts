@@ -1,5 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { messagesApi, type Message } from '../api/messages';
+import {
+    messagesApi,
+    type Message,
+    type MessageWriteble,
+} from '../api/messages';
 import { CONFIG } from '../config';
 
 export const useMessages = () => {
@@ -12,7 +16,7 @@ export const useMessages = () => {
     });
 
     const sendMutation = useMutation({
-        mutationFn: (message: Omit<Message, 'id'>) => messagesApi.send(message),
+        mutationFn: (message: MessageWriteble) => messagesApi.send(message),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['messages'] });
         },

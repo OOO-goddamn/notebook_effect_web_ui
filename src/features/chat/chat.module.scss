@@ -1,3 +1,5 @@
+//todo почистить файл
+
 $red-line-left: 10rem;
 $message-left: 2rem + $red-line-left;
 .red-line {
@@ -56,4 +58,8 @@ $message-left: 2rem + $red-line-left;
     left: 20px;
     top: 180px;
     transform: rotate(30deg);
+}
+
+.empty-line {
+    height: 32px;
 }
