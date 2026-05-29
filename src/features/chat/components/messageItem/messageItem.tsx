@@ -1,22 +1,31 @@
 import styles from '../../chat.module.scss';
 import clsx from 'clsx';
-import type { Message } from 'Api/messages';
+import type { CSSProperties, PropsWithChildren } from 'react';
+
+export const MessageWrapper = ({
+    cls,
+    children,
+}: PropsWithChildren<{ cls: string }>) => {
+    return (
+        <div className={clsx(styles.notebookLines, 'flex', 'flex-col', cls)}>
+            {children}
+        </div>
+    );
+};
 
 interface MessageItemProps {
-    message: Message;
+    style?: CSSProperties;
+    cls?: string;
 }
 
-export const MessageItem = ({ message }: MessageItemProps) => {
-    const key = `${message.authorName}-${message.text}-${message.color}`;
-
+export const MessageItem = ({
+    cls,
+    style,
+    children,
+}: PropsWithChildren<MessageItemProps>) => {
     return (
-        <div
-            key={key}
-            className={clsx(styles.notebookLines, 'flex')}
-            style={{ color: message.color }}
-        >
-            <div>{message.authorName}:</div>
-            <div>{message.text}</div>
+        <div style={style} className={clsx('flex', cls)}>
+            {children}
         </div>
     );
 };
