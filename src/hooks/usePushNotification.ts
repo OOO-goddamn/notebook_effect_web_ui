@@ -4,6 +4,8 @@ import { VAPID_PUBLIC_KEY } from 'Constants/api.ts';
 import { notificationApi } from 'Api/notification.ts';
 import { usePushStore } from 'Store/pushStore.ts';
 
+const urlWorker = '/workers/notification_sw.js';
+
 export const usePushNotification = () => {
     const setSubscriptionData = usePushStore((state) => state.setSubscriptionData);
     const clearSubscriptionData = usePushStore((state) => state.clearSubscriptionData);
@@ -23,8 +25,11 @@ export const usePushNotification = () => {
         if (!isSupported) {
             return;
         }
-
-        navigator.serviceWorker.ready.then((registration) => {
+        navigator.serviceWorker.getRegistration(urlWorker).then((registration) => {
+            if (!registration) {
+                clearSubscriptionData();
+                return registration;
+            }
             registration?.pushManager.getSubscription().then((subscription) => {
                 if (subscription) {
                     setSubscriptionData(subscription.endpoint, true);
@@ -47,7 +52,7 @@ export const usePushNotification = () => {
                 }
 
                 // 2. Register Service Worker
-                const registration = await registrationServiceWorker('/notification_sw.js');
+                const registration = await registrationServiceWorker(urlWorker);
 
                 // 3. Signing up the user
                 const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);

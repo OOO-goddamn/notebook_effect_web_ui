@@ -12,24 +12,26 @@ interface ToolbarProps {
 export const Toolbar = ({ onDeleteAll, onLogout }: ToolbarProps) => {
     const { name } = useAuthStore();
     return (
-        !!name && (
-            <div className={clsx(styles.toolbar, 'flex', 'flex-col', 'gap-10')}>
-                <Button
-                    className='h-auto w-auto p-0 hover:bg-transparent hover:scale-105 transition-transform'
-                    variant='ghost'
-                    onClick={onDeleteAll}
-                >
-                    <img alt='eraser' width={100} height={100} src='/erase.png' />
-                </Button>
-                <Button
-                    className='h-auto w-auto p-0 hover:bg-transparent hover:scale-105 transition-transform'
-                    variant='ghost'
-                    onClick={onLogout}
-                >
-                    <img alt='ruler' width={100} height={100} className={styles.ruler} src='/ruler.png' />
-                </Button>
-                <NotificationToggle />
-            </div>
-        )
+        <div className={clsx(styles.toolbar, 'flex', 'flex-col', 'gap-10')}>
+            {!!name && (
+                <>
+                    <Button
+                        className='h-auto w-auto p-0 hover:bg-transparent hover:scale-105 transition-transform'
+                        variant='ghost'
+                        onClick={onDeleteAll}
+                    >
+                        <img alt='eraser' width={100} height={100} src='/erase.png' />
+                    </Button>
+                    <Button
+                        className='h-auto w-auto p-0 hover:bg-transparent hover:scale-105 transition-transform'
+                        variant='ghost'
+                        onClick={onLogout}
+                    >
+                        <img alt='ruler' width={100} height={100} className={styles.ruler} src='/ruler.png' />
+                    </Button>
+                </>
+            )}
+            <NotificationToggle />
+        </div>
     );
 };
