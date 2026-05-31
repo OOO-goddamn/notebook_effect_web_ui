@@ -2,9 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { urlBase64ToUint8Array } from 'Utils/encode.ts';
 import { VAPID_PUBLIC_KEY } from 'Constants/api.ts';
 import { notificationApi } from 'Api/notification.ts';
+import { usePushStore } from 'Store/pushStore.ts';
 
 export const usePushNotification = () => {
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    const setSubscriptionData = usePushStore((state) => state.setSubscriptionData);
+    const clearSubscriptionData = usePushStore((state) => state.clearSubscriptionData);
+    const isSubscribed = usePushStore((state) => state.isSubscribed);
 
     const isSupported = useMemo(() => {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -24,9 +27,9 @@ export const usePushNotification = () => {
         navigator.serviceWorker.ready.then((registration) => {
             registration?.pushManager.getSubscription().then((subscription) => {
                 if (subscription) {
-                    setIsSubscribed(true);
+                    setSubscriptionData(subscription.endpoint, true);
                 } else {
-                    setIsSubscribed(false);
+                    clearSubscriptionData();
                 }
             });
         });
@@ -55,8 +58,7 @@ export const usePushNotification = () => {
 
                 // 4. We are sending a subscription to the backend
                 await notificationApi.subscribe(subscription);
-
-                setIsSubscribed(true);
+                setSubscriptionData(subscription.endpoint, true);
             } catch (error) {
                 console.error('Ошибка:', error);
             }

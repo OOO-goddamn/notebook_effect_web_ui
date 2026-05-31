@@ -23,10 +23,10 @@ export const messagesApi = {
         return response.json();
     },
 
-    send: async (body: MessageWritable): Promise<Message> => {
+    send: async (body: MessageWritable, headers: Record<string, string> = {}): Promise<Message> => {
         const response = await fetch(`${API_BASE_URL}/messages`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...headers },
             body: JSON.stringify(body),
         });
         if (!response.ok) {
