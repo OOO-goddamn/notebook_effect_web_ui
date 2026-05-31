@@ -11,7 +11,7 @@ export const NotificationToggle = () => {
                 variant='ghost'
                 className='h-auto w-auto p-0 hover:scale-105 hover:bg-transparent'
             >
-                {isSubscribed ? <Bell className='size-18.75' /> : <BellCheck className='size-18.75 text-green-700' />}
+                {isSubscribed ? <BellCheck className='size-18.75 text-green-700' /> : <Bell className='size-18.75' />}
             </Button>
         )
     );
