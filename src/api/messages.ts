@@ -1,4 +1,4 @@
-import { CONFIG } from '../config';
+import { API_BASE_URL } from 'Constants/api.ts';
 
 export interface Message {
     id?: number;
@@ -8,7 +8,7 @@ export interface Message {
     creationTime: string;
 }
 
-export interface MessageWriteble {
+export interface MessageWritable {
     authorName: string;
     text: string;
     color: string;
@@ -16,15 +16,15 @@ export interface MessageWriteble {
 
 export const messagesApi = {
     fetchAll: async (): Promise<Message[]> => {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/messages`);
+        const response = await fetch(`${API_BASE_URL}/messages`);
         if (!response.ok) {
             throw new Error('Failed to fetch messages');
         }
         return response.json();
     },
 
-    send: async (body: MessageWriteble): Promise<Message> => {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/messages`, {
+    send: async (body: MessageWritable): Promise<Message> => {
+        const response = await fetch(`${API_BASE_URL}/messages`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -36,7 +36,7 @@ export const messagesApi = {
     },
 
     deleteAll: async (): Promise<void> => {
-        await fetch(`${CONFIG.API_BASE_URL}/messages`, {
+        await fetch(`${API_BASE_URL}/messages`, {
             method: 'DELETE',
         });
     },
