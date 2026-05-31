@@ -1,12 +1,9 @@
 import styles from './chat.module.scss';
-import { useMessages } from '../../hooks/useMessages';
-import {
-    MessageItem,
-    MessageWrapper,
-} from './components/messageItem/messageItem';
+import { useMessages } from 'Hooks/useMessages';
+import { MessageItem, MessageWrapper } from './components/messageItem/messageItem';
 import { MessageInput } from './components/messageInput/messageInput';
 import { Toolbar } from './components/toolbar/toolbar';
-import { useAuthStore } from '../../store/user';
+import { useAuthStore } from 'Store/user';
 import { Page } from 'Components/page/page';
 import { CONFIG } from 'Config/index';
 import { Fragment } from 'react';
@@ -35,22 +32,15 @@ export const Chat = () => {
             <MessageWrapper>
                 {messages.map((msg, index) => {
                     const date = new Date(msg.creationTime);
-                    const prevDate =
-                        index !== 0
-                            ? new Date(messages[index - 1].creationTime)
-                            : date;
+                    const prevDate = index !== 0 ? new Date(messages[index - 1].creationTime) : date;
 
                     const time = date.toLocaleTimeString('ru-RU', {
                         hour: '2-digit',
                         minute: '2-digit',
                     });
-                    const showAuthor =
-                        index === 0 ||
-                        msg.authorName !== messages[index - 1].authorName;
+                    const showAuthor = index === 0 || msg.authorName !== messages[index - 1].authorName;
                     return (
-                        <Fragment
-                            key={`${msg.authorName}-${msg.text}-${msg.color}`}
-                        >
+                        <Fragment key={msg.id}>
                             {(!compareDates(prevDate, date) || index === 0) && (
                                 <>
                                     <MessageItem
@@ -76,15 +66,8 @@ export const Chat = () => {
                                     />
                                 </>
                             )}
-                            {showAuthor && (
-                                <MessageItem style={{ color: msg.color }}>
-                                    {msg.authorName}
-                                </MessageItem>
-                            )}
-                            <MessageItem
-                                style={{ color: msg.color }}
-                                cls='ml-8 gap-4'
-                            >
+                            {showAuthor && <MessageItem style={{ color: msg.color }}>{msg.authorName}</MessageItem>}
+                            <MessageItem style={{ color: msg.color }} cls='ml-8 gap-4'>
                                 <div>{time}</div>
                                 <div>{msg.text}</div>
                             </MessageItem>
@@ -93,13 +76,7 @@ export const Chat = () => {
                 })}
             </MessageWrapper>
 
-            {!!name && (
-                <MessageInput
-                    userName={name}
-                    userColor={color}
-                    onSend={handleSend}
-                />
-            )}
+            {!!name && <MessageInput userName={name} userColor={color} onSend={handleSend} />}
         </Page>
     );
 };

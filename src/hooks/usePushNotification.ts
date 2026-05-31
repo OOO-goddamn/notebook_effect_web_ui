@@ -22,7 +22,7 @@ export const usePushNotification = () => {
         }
 
         navigator.serviceWorker.ready.then((registration) => {
-            registration.pushManager.getSubscription().then((subscription) => {
+            registration?.pushManager.getSubscription().then((subscription) => {
                 if (subscription) {
                     setIsSubscribed(true);
                 } else {
@@ -35,16 +35,16 @@ export const usePushNotification = () => {
     const subscribeUser = async () => {
         if (isSupported) {
             try {
-                // 1. Register Service Worker
-                const registration = await navigator.serviceWorker.register('/workers/notification_sw.js');
-
-                // 2. Requesting permission to push messages
+                // 1. Requesting permission to push messages
                 const permission = await Notification.requestPermission();
                 setPermission(Notification.permission);
                 if (permission !== 'granted') {
                     alert('Разрешение на уведомления отклонено');
                     return;
                 }
+
+                // 2. Register Service Worker
+                const registration = await registrationServiceWorker('/notification_sw.js');
 
                 // 3. Signing up the user
                 const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
@@ -56,7 +56,7 @@ export const usePushNotification = () => {
                 // 4. We are sending a subscription to the backend
                 await notificationApi.subscribe(subscription);
 
-                alert('Подписка на уведомления оформлена');
+                setIsSubscribed(true);
             } catch (error) {
                 console.error('Ошибка:', error);
             }
@@ -71,4 +71,25 @@ export const usePushNotification = () => {
         permission,
         subscribeUser,
     };
+};
+
+const registrationServiceWorker = async (url: string) => {
+    const registration = await navigator.serviceWorker.register(url);
+
+    const serviceWorker = registration.active || registration.installing || registration.waiting;
+
+    if (registration.active?.state !== 'activated') {
+        await new Promise<void>((resolve) => {
+            // eslint-disable-next-line
+            serviceWorker?.addEventListener('statechange', (e: any) => {
+                if (e.target.state === 'activated') {
+                    resolve();
+                }
+            });
+            if (registration.active?.state === 'activated') {
+                resolve();
+            }
+        });
+    }
+    return registration;
 };

@@ -10,6 +10,5 @@ export const notificationApi = {
         if (!response.ok) {
             throw new Error('Failed to subscribe notification');
         }
-        return response.json();
-    }
+    },
 };

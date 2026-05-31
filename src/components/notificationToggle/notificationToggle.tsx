@@ -7,7 +7,7 @@ export const NotificationToggle = () => {
     return (
         isSupported && (
             <Button
-                onClick={isSubscribed ? () => {} : subscribeUser}
+                onClick={subscribeUser}
                 variant='ghost'
                 className='h-auto w-auto p-0 hover:scale-105 hover:bg-transparent'
             >
