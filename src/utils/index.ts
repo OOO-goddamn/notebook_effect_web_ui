@@ -1,1 +1,0 @@
-export { COLORS, getRandomColor, type Color } from './colors';
